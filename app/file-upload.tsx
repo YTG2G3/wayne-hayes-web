@@ -15,9 +15,9 @@ export default function FileUpload({
 
     file.arrayBuffer().then((buffer) => {
       const base64 = Buffer.from(buffer).toString("base64");
-      runBashAction(base64).then((res) =>
-        res ? setResult(res) : alert("An error occurred")
-      );
+      runBashAction(base64)
+        .then((res) => setResult(res || "Error: Unexpected error occurred"))
+        .catch((e) => setResult("Error: " + e));
     });
   }, [file, setResult]);
 

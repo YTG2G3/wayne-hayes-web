@@ -21,13 +21,13 @@ export async function runBashAction(file: string): Promise<string | null> {
 
     fs.writeFileSync(filePath, f);
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       exec(
         `bash ./backend.sh .${filePath}`,
         { cwd: "./bash" },
-        (error, stdout) => {
+        (error, stdout, stderr) => {
           if (error) {
-            reject(error);
+            resolve("Error: " + stderr);
           } else {
             resolve(stdout);
           }
