@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import { fredoka, inter } from "@/lib/fonts";
+import { inter } from "@/lib/fonts";
 
 export const metadata: Metadata = {
   title: "Wayne Hayes Web Challenge",
@@ -15,9 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn("antialiased", inter.variable, fredoka.variable)}>
-        {children}
-      </body>
+      <body className={cn("antialiased", inter.className)}>{children}</body>
     </html>
   );
 }
