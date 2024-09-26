@@ -1,36 +1,20 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Non-scientific sub-project: "web front-ends, submission management, web drives"
 
-## Getting Started
+> Henry Kwon
 
-First, run the development server:
+## How it functions
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. File is sent from client to server through Next.JS’ server action
+2. Server downloads the file into ./files folder with a random filename generated with crypto.randomUUID
+3. Child process starts and randomly generated name is passed into backend.sh as an argument
+4. Resulting output to stdout is collected and sent back to client (If error occurred, the error is returned as string to client)
+5. Client displays server response in textarea component
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Considerations
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- File size limiting: I have two file size limitation logic implemented in code: one in client (buffer.byteLength > MAX_FILE_SIZE) and one in server to block exception cases where user directly requests through custom HTTP client
+- Error handling: Since exceptions that occurred in server action are not properly handled in client, I added a custom exception handler by considering null responses as error instead
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Improvements
+- At the moment, files are directly stored in the same environment with the server. This is bad practice and must be moved to a separate bucket for isolation.
+- To avoid timeouts when bash processes take a longer time, a database and docker images are necessary to track each of the ongoing processes instead of a single request-response chain.
