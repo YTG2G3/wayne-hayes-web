@@ -3,6 +3,8 @@ import { Label } from "@/components/ui/label";
 import { runBashAction } from "@/lib/actions";
 import { useEffect, useState } from "react";
 
+const MAX_FILE_SIZE = 1024 * 1024; // 1MB
+
 export default function FileUpload({
   setResult,
 }: {
@@ -14,6 +16,11 @@ export default function FileUpload({
     if (!file) return;
 
     file.arrayBuffer().then((buffer) => {
+      if (buffer.byteLength > MAX_FILE_SIZE) {
+        setResult("Error: File size exceeds 1MB limit");
+        return;
+      }
+
       const base64 = Buffer.from(buffer).toString("base64");
       runBashAction(base64)
         .then((res) => setResult(res || "Error: Unexpected error occurred"))
