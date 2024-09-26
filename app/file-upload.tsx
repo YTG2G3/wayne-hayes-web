@@ -19,7 +19,7 @@ export default function FileUpload({
         res ? setResult(res) : alert("An error occurred")
       );
     });
-  }, [file]);
+  }, [file, setResult]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFile(event.target.files ? event.target.files[0] : null);
