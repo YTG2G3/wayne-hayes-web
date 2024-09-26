@@ -1,11 +1,13 @@
-"use client";
-
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { testFileAction } from "@/lib/actions";
+import { runBashAction } from "@/lib/actions";
 import { useEffect, useState } from "react";
 
-export default function FileUpload() {
+export default function FileUpload({
+  setResult,
+}: {
+  setResult: (result: string) => void;
+}) {
   const [file, setFile] = useState<File | null>(null);
 
   useEffect(() => {
@@ -13,7 +15,9 @@ export default function FileUpload() {
 
     file.arrayBuffer().then((buffer) => {
       const base64 = Buffer.from(buffer).toString("base64");
-      testFileAction(base64);
+      runBashAction(base64).then((res) =>
+        res ? setResult(res) : alert("An error occurred")
+      );
     });
   }, [file]);
 
